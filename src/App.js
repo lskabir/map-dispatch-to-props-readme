@@ -1,50 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { addItem } from './actions/items';
 import './App.css';
 
 class App extends Component {
 
-  state = {
-    todo: ''
-  }
-
-  handleOnChange = event => {
-    this.setState({
-      todo: event.target.value
-    });
-  }
-
-  handleOnSubmit = event => {
-    event.preventDefault();
-    console.log("Todo being added: ", this.state.todo);
-    this.props.dispatch({ type: 'ADD_TODO', todo: this.state.todo });
-    this.setState({ todo: '' });
+  handleOnClick() {
+    this.props.addItem()
   }
 
   render() {
-    const renderTodos = () => this.props.todos.map(todo => <li key={todo}>{todo}</li>);
     return (
       <div className="App">
-      <form onSubmit={(event) => this.handleOnSubmit(event)}>
-        <input
-          type="text"
-          onChange={(event) => this.handleOnChange(event)}
-          id="todos"
-          placeholder="add todo" 
-          value={this.state.todo}/>
-        <input type="submit" />
-      </form>
-      <h2>Todos:</h2>
-        <ol>{renderTodos()}</ol>
+        <button onClick={this.handleOnClick}>Click</button>
+        <p>{this.props.items.length}</p>
       </div>
     );
   }
 };
 
-const mapStateToProps = (state) => {
-  return {
-    todos: state.todos
-  };
-};
-
-export default connect(mapStateToProps)(App);
+export default connect(state => ({items: state.items}), { addItem })(App);
